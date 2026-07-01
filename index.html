@@ -111,6 +111,11 @@
     max-width:540px; line-height:1.7;
   }
   .lead-break{display:block; content:"";}
+  @media(max-width:760px){
+    .lead-break{display:none;}
+    .section-head p br, .about-grid p br, .speaker-talk-title br,
+    #prize .section-head p br{display:none;}
+  }
   .hero-meta{
     margin-top:36px;
     display:flex; flex-wrap:wrap; gap:14px 36px;
@@ -210,6 +215,7 @@
     margin-bottom:16px; border:1px solid var(--line);
     background:var(--white); padding:10px;
     box-shadow:inset 0 0 0 1px rgba(27,27,27,0.05);
+    display:block; margin-left:auto; margin-right:auto;
   }
 
   /* timeline */
