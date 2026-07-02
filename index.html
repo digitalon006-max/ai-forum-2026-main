@@ -135,11 +135,6 @@
     .speaker-talk-title{font-size:16px;}
     .speaker-time{font-size:14px;}
     .mc-line{font-size:15px;}
-    .t-time{font-size:20px;}
-    .t-title{font-size:17px;}
-    .t-sub{font-size:15px;}
-    .t-break .t-time{font-size:16px;}
-    .t-break .t-title{font-size:15px;}
     .ticket-tag{font-size:13px;}
     .ticket-top h3{font-size:24px;}
     .ticket-top p{font-size:15px;}
@@ -262,8 +257,23 @@
     display:block; margin-left:auto; margin-right:auto;
   }
 
-  /* timeline */
-  .timeline{margin-top:48px; position:relative; padding-left:28px;}
+  /* schedule */
+  .schedule-wrap{
+    margin-top:48px;
+    display:grid;
+    grid-template-columns:200px 1fr;
+    gap:48px;
+    align-items:start;
+  }
+  @media(max-width:760px){
+    .schedule-wrap{
+      grid-template-columns:1fr;
+      gap:32px;
+    }
+  }
+
+  /* timeline (왼쪽) */
+  .timeline{position:relative; padding-left:28px;}
   .timeline::before{
     content:""; position:absolute; left:6px; top:6px; bottom:6px; width:2px; background:var(--line);
   }
@@ -273,13 +283,52 @@
     content:""; position:absolute; left:-28px; top:4px; width:14px; height:14px;
     border-radius:50%; background:var(--yellow); border:3px solid var(--paper); box-shadow:0 0 0 2px var(--yellow);
   }
-  .t-time{font-family:'Noto Sans KR'; font-weight:900; font-size:26px; color:var(--ink);}
+  .t-time{font-family:'Noto Sans KR', sans-serif; font-weight:900; font-size:26px; color:var(--ink);}
   .t-title{font-size:21.5px; font-weight:700; margin-top:4px;}
   .t-sub{font-size:19.5px; color:var(--ink-soft); margin-top:2px;}
   .t-break{padding-bottom:24px; opacity:0.7;}
   .t-break .t-time{font-size:19.5px;}
   .t-break .t-title{font-size:19px; font-weight:500;}
   .t-break::before{background:var(--ink-soft); box-shadow:0 0 0 2px var(--ink-soft); width:9px; height:9px; left:-25px; top:6px;}
+
+  /* 세부 프로그램 (오른쪽) */
+  .detail-program{display:flex; flex-direction:column; gap:12px;}
+  .dp-card{
+    background:var(--white); border:1px solid var(--line); border-radius:14px;
+    padding:16px 20px; display:grid; grid-template-columns:76px 1fr; gap:14px; align-items:start;
+  }
+  .dp-card.dp-break{
+    background:transparent; border:1px dashed var(--line); padding:12px 20px;
+    grid-template-columns:76px 1fr; opacity:0.7;
+  }
+  .dp-card.dp-opening{
+    background:var(--yellow-soft); border-color:var(--yellow);
+  }
+  .dp-time-col{display:flex; flex-direction:column; gap:4px; padding-top:2px;}
+  .dp-time{font-family:'Noto Sans KR', sans-serif; font-weight:900; font-size:17px; color:var(--ink); white-space:nowrap;}
+  .dp-dur{font-size:13px; color:var(--ink-soft);}
+  .dp-tag{
+    display:inline-block; font-size:13px; font-weight:700; color:var(--yellow-deep);
+    background:var(--yellow-soft); border:1px solid var(--yellow); border-radius:999px;
+    padding:2px 9px; margin-bottom:6px;
+  }
+  .dp-title{font-size:16px; font-weight:700; color:var(--ink); line-height:1.45;}
+  .dp-name{font-size:14px; color:var(--ink-soft); margin-top:3px;}
+
+  @media(max-width:760px){
+    .t-time{font-size:18px;}
+    .t-title{font-size:15px;}
+    .t-sub{font-size:13px;}
+    .t-break .t-time{font-size:15px;}
+    .t-break .t-title{font-size:14px;}
+    .dp-card{grid-template-columns:58px 1fr; gap:10px; padding:12px 14px;}
+    .dp-card.dp-break{grid-template-columns:58px 1fr; padding:10px 14px;}
+    .dp-time{font-size:13px;}
+    .dp-dur{font-size:11px;}
+    .dp-tag{font-size:11px;}
+    .dp-title{font-size:13px;}
+    .dp-name{font-size:12px;}
+  }
 
   /* tickets / participation */
   .ticket-grid{margin-top:48px; display:grid; grid-template-columns:1fr 1fr; gap:28px;}
@@ -376,7 +425,7 @@
     content:"+"; font-size:26px; font-weight:400; color:var(--yellow-deep);
     margin-left:12px; flex-shrink:0;
   }
-  .faq-item[open] summary::after{content:"−";}
+  .faq-item[open] summary::after{content:"-";}
   .faq-item p{margin-top:12px; font-size:20px; color:var(--ink-soft); line-height:1.7;}
 
   /* contact card */
@@ -525,7 +574,7 @@
       <div class="speaker-card-v2">
         <div class="speaker-photo-wrap">
           <img src="images/gwedo.jpg" alt="궤도" loading="lazy">
-          <span class="speaker-time-badge">16:00 – 17:00</span>
+          <span class="speaker-time-badge">16:00 – 16:50</span>
           <span class="speaker-session-no">SESSION 03</span>
         </div>
         <div class="speaker-body">
@@ -546,31 +595,116 @@
       <div class="section-title">Schedule</div>
       <h2>시간표</h2>
     </div>
-    <div class="timeline">
-      <div class="t-item">
-        <div class="t-time">14:00</div>
-        <div class="t-title">개회 및 김상균 교수 강연</div>
-        <div class="t-sub">AI 비즈니스</div>
+
+    <div class="schedule-wrap">
+      <!-- 왼쪽: 간략 타임라인 -->
+      <div class="timeline">
+        <div class="t-item">
+          <div class="t-time">13:30</div>
+          <div class="t-title">등록 및 입장</div>
+        </div>
+        <div class="t-item">
+          <div class="t-time">13:50</div>
+          <div class="t-title">개회</div>
+        </div>
+        <div class="t-item">
+          <div class="t-time">13:55</div>
+          <div class="t-title">축사</div>
+        </div>
+        <div class="t-item">
+          <div class="t-time">14:00</div>
+          <div class="t-title">강연 1</div>
+          <div class="t-sub">AI 비즈니스</div>
+        </div>
+        <div class="t-item t-break">
+          <div class="t-time">14:50</div>
+          <div class="t-title">휴식</div>
+          <div class="t-sub">10분</div>
+        </div>
+        <div class="t-item">
+          <div class="t-time">15:00</div>
+          <div class="t-title">강연 2</div>
+          <div class="t-sub">피지컬 AI</div>
+        </div>
+        <div class="t-item t-break">
+          <div class="t-time">15:50</div>
+          <div class="t-title">휴식</div>
+          <div class="t-sub">10분</div>
+        </div>
+        <div class="t-item">
+          <div class="t-time">16:00</div>
+          <div class="t-title">강연 3</div>
+          <div class="t-sub">AI 인문학</div>
+        </div>
+        <div class="t-item t-break">
+          <div class="t-time">16:50</div>
+          <div class="t-title">경품 추첨</div>
+        </div>
+        <div class="t-item t-break">
+          <div class="t-time">16:55</div>
+          <div class="t-title">폐회</div>
+        </div>
       </div>
-      <div class="t-item t-break">
-        <div class="t-time">14:50</div>
-        <div class="t-title">휴식</div>
-        <div class="t-sub">10분</div>
-      </div>
-      <div class="t-item">
-        <div class="t-time">15:00</div>
-        <div class="t-title">김덕진 소장 강연</div>
-        <div class="t-sub">피지컬 AI</div>
-      </div>
-      <div class="t-item t-break">
-        <div class="t-time">15:50</div>
-        <div class="t-title">휴식</div>
-        <div class="t-sub">10분</div>
-      </div>
-      <div class="t-item">
-        <div class="t-time">16:00</div>
-        <div class="t-title">궤도(김재혁) 강연 및 폐회</div>
-        <div class="t-sub">AI 인문학</div>
+
+      <!-- 오른쪽: 세부 프로그램 -->
+      <div class="detail-program">
+        <div class="dp-card dp-opening">
+          <div class="dp-time-col"><div class="dp-time">13:30</div><div class="dp-dur">20분</div></div>
+          <div><div class="dp-title">참석자 등록 및 입장 안내</div></div>
+        </div>
+        <div class="dp-card dp-opening">
+          <div class="dp-time-col"><div class="dp-time">13:50</div><div class="dp-dur">5분</div></div>
+          <div>
+            <div class="dp-title">개회 및 서울 AI·디지털배움터 사업 소개</div>
+            <div class="dp-name">사회자 문소리 아나운서</div>
+          </div>
+        </div>
+        <div class="dp-card dp-opening">
+          <div class="dp-time-col"><div class="dp-time">13:55</div><div class="dp-dur">5분</div></div>
+          <div>
+            <div class="dp-title">축사</div>
+          </div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-time-col"><div class="dp-time">14:00</div><div class="dp-dur">50분</div></div>
+          <div>
+            <span class="dp-tag">SESSION 01 · AI 비즈니스</span>
+            <div class="dp-title">AI가 다시 그리는 일, 산업, 경제의 지도</div>
+            <div class="dp-name">김상균 교수 · 경희대학교 경영대학원</div>
+          </div>
+        </div>
+        <div class="dp-card dp-break">
+          <div class="dp-time-col"><div class="dp-time">14:50</div><div class="dp-dur">10분</div></div>
+          <div><div class="dp-title">휴식</div></div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-time-col"><div class="dp-time">15:00</div><div class="dp-dur">50분</div></div>
+          <div>
+            <span class="dp-tag">SESSION 02 · 피지컬 AI</span>
+            <div class="dp-title">스크린을 벗어난 AI</div>
+            <div class="dp-name">김덕진 소장 · IT커뮤니케이션연구소</div>
+          </div>
+        </div>
+        <div class="dp-card dp-break">
+          <div class="dp-time-col"><div class="dp-time">15:50</div><div class="dp-dur">10분</div></div>
+          <div><div class="dp-title">휴식</div></div>
+        </div>
+        <div class="dp-card">
+          <div class="dp-time-col"><div class="dp-time">16:00</div><div class="dp-dur">50분</div></div>
+          <div>
+            <span class="dp-tag">SESSION 03 · AI 인문학</span>
+            <div class="dp-title">AI시대, 인류는 새로운 도구로 무엇을 볼 수 있을까?</div>
+            <div class="dp-name">궤도 (김재혁) · 과학 커뮤니케이터</div>
+          </div>
+        </div>
+        <div class="dp-card dp-opening">
+          <div class="dp-time-col"><div class="dp-time">16:50</div><div class="dp-dur">5분</div></div>
+          <div><div class="dp-title">경품 추첨</div><div class="dp-name">궤도 (김재혁) 진행</div></div>
+        </div>
+        <div class="dp-card dp-opening">
+          <div class="dp-time-col"><div class="dp-time">16:55</div><div class="dp-dur">5분</div></div>
+          <div><div class="dp-title">만족도 조사 및 행사 종료 안내</div><div class="dp-name">사회자</div></div>
+        </div>
       </div>
     </div>
   </div>
@@ -598,7 +732,6 @@
           <a href="https://forms.gle/E1km9FbGeswTKrhQ9" class="ticket-btn">사전등록 신청하기</a>
         </div>
       </div>
-
       <div class="ticket online">
         <div class="ticket-top">
           <div class="ticket-tag">ONLINE</div>
@@ -714,7 +847,6 @@
       </div>
       <div class="map-box" style="background-image:url('images/location-map-b0f00576.png'); background-size:cover; background-position:center; color:transparent;">지도</div>
     </div>
-
     <div class="transit-grid">
       <div class="transit-card">
         <h4>지하철</h4>
@@ -737,7 +869,6 @@
         </table>
       </div>
     </div>
-
     <div class="parking-note">
       <h4>주차장 안내</h4>
       <ul>
